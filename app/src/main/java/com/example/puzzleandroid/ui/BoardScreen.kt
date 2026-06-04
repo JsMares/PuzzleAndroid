@@ -1,8 +1,74 @@
 package com.example.puzzleandroid.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+@Preview(showBackground = true)
+@Composable
+fun BoardScreen(boardViewModel: BoardViewModel = viewModel()) {
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        val itemSize = maxWidth / 9
+
+        GameBoard(
+            boardViewModel = boardViewModel,
+            itemSize = itemSize
+        )
+    }
+}
 
 @Composable
-fun BoardScreen() {
+private fun GameBoard(
+    boardViewModel: BoardViewModel,
+    itemSize: Dp
+) {
+    val board = boardViewModel.board
+    val selected = boardViewModel.selected
 
+    Column {
+        board.forEachIndexed { rowIndex, row ->
+            Row {
+                row.forEachIndexed { colIndex, item ->
+                    val isSelected =
+                        boardViewModel.selected?.row == rowIndex && boardViewModel.selected?.col == colIndex
+
+                    Box(
+                        modifier = Modifier
+                            .size(itemSize)
+                            .padding(2.dp)
+                            .background(item.type.toColor())
+                            .border(
+                                width = if (isSelected) 3.dp else 0.dp,
+                                color = Color.Gray
+                            )
+                            .clickable {
+                                boardViewModel.clickItem(rowIndex, colIndex)
+                            }
+                    )
+                }
+            }
+        }
+    }
 }
