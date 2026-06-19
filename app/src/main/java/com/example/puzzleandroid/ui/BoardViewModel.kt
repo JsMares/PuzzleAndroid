@@ -62,7 +62,7 @@ class BoardViewModel : ViewModel() {
         board = newBoard
     }
 
-    fun iterateRows() : List<SelectedItem> {
+    private fun iterateRows() : List<SelectedItem> {
         val allMatches = mutableListOf<SelectedItem>()
 
         board.forEachIndexed { rowIndex, row ->
@@ -86,6 +86,45 @@ class BoardViewModel : ViewModel() {
 
                     count = 1
                     lastItem = row[colIndex].type
+                    actualMatches.add(SelectedItem(rowIndex, colIndex))
+                }
+            }
+
+            if (count >= 3) {
+                allMatches.addAll(actualMatches)
+            }
+        }
+
+        return allMatches
+    }
+
+    private fun iterateColumns() : List<SelectedItem> {
+        val allMatches = mutableListOf<SelectedItem>()
+
+        // Recorrer la primera fila del tablero
+        for (colIndex in board[0].indices) {
+            val actualMatches = mutableListOf<SelectedItem>()
+
+            var count = 1
+            var lastItem = board[0][colIndex].type
+
+            actualMatches.add(SelectedItem(0, colIndex))
+
+            for (rowIndex in 1 until board.size) {
+                val actualItem = board[rowIndex][colIndex].type
+
+                if (actualItem == lastItem) {
+                    count++
+                    actualMatches.add(SelectedItem(rowIndex, colIndex))
+                } else {
+                    if (count >= 3) {
+                        allMatches.addAll(actualMatches)
+                    }
+
+                    actualMatches.clear()
+
+                    count = 1
+                    lastItem = actualItem
                     actualMatches.add(SelectedItem(rowIndex, colIndex))
                 }
             }
