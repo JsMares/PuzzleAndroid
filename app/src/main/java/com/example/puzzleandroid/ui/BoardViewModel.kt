@@ -1,10 +1,10 @@
 package com.example.puzzleandroid.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlin.jvm.internal.Intrinsics.Kotlin
 
 class BoardViewModel : ViewModel() {
     var board by mutableStateOf(generateBoard())
@@ -60,6 +60,42 @@ class BoardViewModel : ViewModel() {
 
         // Guardar cambios
         board = newBoard
+    }
+
+    fun iterateRows() : List<SelectedItem> {
+        val allMatches = mutableListOf<SelectedItem>()
+
+        board.forEachIndexed { rowIndex, row ->
+            val actualMatches = mutableListOf<SelectedItem>()
+
+            var count = 1
+            var lastItem = row[0].type
+
+            actualMatches.add(SelectedItem(rowIndex, 0))
+
+            for (colIndex in 1 until row.size) {
+                if (lastItem == row[colIndex].type) {
+                    count++
+                    actualMatches.add(SelectedItem(rowIndex, colIndex))
+                } else {
+                    if (count >= 3) {
+                        allMatches.addAll(actualMatches)
+                    }
+
+                    actualMatches.clear()
+
+                    count = 1
+                    lastItem = row[colIndex].type
+                    actualMatches.add(SelectedItem(rowIndex, colIndex))
+                }
+            }
+
+            if (count >= 3) {
+                allMatches.addAll(actualMatches)
+            }
+        }
+
+        return allMatches
     }
 }
 
