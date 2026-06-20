@@ -13,6 +13,10 @@ class BoardViewModel : ViewModel() {
     var selected by mutableStateOf<SelectedItem?>(null)
         private set
 
+    init {
+        resolveCascades()
+    }
+
     private fun generateBoard() : List<List<Item>> {
         return List(9) {
             List(9) {
@@ -32,6 +36,14 @@ class BoardViewModel : ViewModel() {
             // Verificar si los items seleccionados son "vecinos"
             if (areNeighbors(first, second)) {
                 swap(first, second)
+
+                val matches = findMatches()
+
+                if (matches.isEmpty()) {
+                    swap(first, second)
+                } else {
+                    resolveCascades()
+                }
             }
 
             // Reiniciar el valor del item seleccionado
@@ -135,6 +147,30 @@ class BoardViewModel : ViewModel() {
         }
 
         return allMatches
+    }
+
+    private fun findMatches() : List<SelectedItem> {
+        return (iterateRows() + iterateColumns()).distinct()
+    }
+
+    private fun removeMatches(matches: List<SelectedItem>) {
+        val newBoard = board.map { it.toMutableList() }.toMutableList()
+
+        matches.map { match ->
+            newBoard[match.row][match.col] = Item(ItemType.entries.random())
+        }
+
+        board = newBoard
+    }
+
+    private fun resolveCascades() {
+        var matches = findMatches()
+
+        while (matches.isNotEmpty()) {
+            removeMatches(matches)
+
+            matches = findMatches()
+        }
     }
 }
 

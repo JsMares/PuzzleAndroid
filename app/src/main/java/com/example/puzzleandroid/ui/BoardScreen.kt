@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun BoardScreen(boardViewModel: BoardViewModel = viewModel()) {
     LaunchedEffect(true) {
-        boardViewModel.iterateColumns()
+        //boardViewModel.iterateColumns()
     }
 
     BoxWithConstraints(
