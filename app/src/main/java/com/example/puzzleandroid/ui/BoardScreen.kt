@@ -13,8 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,35 +30,43 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Preview(showBackground = true)
 @Composable
 fun BoardScreen(boardViewModel: BoardViewModel = viewModel()) {
-    LaunchedEffect(true) {
-        //boardViewModel.iterateColumns()
-    }
-
     val movements by boardViewModel.movements
 
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-            .background(Color.White),
-        contentAlignment = Alignment.Center
-    ) {
-        val itemSize = maxWidth / 9
-
-        Column(
+    if (boardViewModel.game.value) {
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(8.dp)
+                .background(Color.White),
+            contentAlignment = Alignment.Center
         ) {
-            ControlCustom(movements = movements)
+            val itemSize = maxWidth / 9
 
-            GameBoard(
-                boardViewModel = boardViewModel,
-                itemSize = itemSize
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ControlCustom(movements = movements)
 
-
+                GameBoard(
+                    boardViewModel = boardViewModel,
+                    itemSize = itemSize
+                )
+            }
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                onClick = { boardViewModel.playGame() }
+            ) {
+                Text(text = "¡JUGAR!")
+            }
         }
     }
 }
