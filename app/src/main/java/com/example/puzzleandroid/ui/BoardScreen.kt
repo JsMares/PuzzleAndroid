@@ -102,11 +102,15 @@ private fun GameBoard(
                                 boardViewModel.clickItem(rowIndex, colIndex)
                             }
                     ) {
-                        Image(
-                            painter = painterResource(item.type.toImage()),
-                            contentDescription = null,
-                            modifier = Modifier.padding(2.dp)
-                        )
+                        val imageRes = item.type.toImage()
+
+                        if (imageRes != null) {
+                            Image(
+                                painter = painterResource(imageRes),
+                                contentDescription = null,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                        }
                     }
                 }
             }

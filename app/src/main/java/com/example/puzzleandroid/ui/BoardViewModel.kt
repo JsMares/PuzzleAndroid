@@ -1,7 +1,7 @@
 package com.example.puzzleandroid.ui
 
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +16,7 @@ class BoardViewModel : ViewModel() {
         private set
 
     private val _movements = mutableIntStateOf(24)
-    val movements: MutableIntState = _movements
+    val movements: State<Int> = _movements
 
     private val _game = mutableStateOf(true)
     val game: MutableState<Boolean> = _game
@@ -28,7 +28,9 @@ class BoardViewModel : ViewModel() {
     private fun generateBoard() : List<List<Item>> {
         return List(9) {
             List(9) {
-                Item(type = ItemType.entries.random())
+                Item(type = ItemType.entries
+                    .filter { it != ItemType.EMPTY }
+                    .random())
             }
         }
     }
@@ -95,7 +97,7 @@ class BoardViewModel : ViewModel() {
             actualMatches.add(SelectedItem(rowIndex, 0))
 
             for (colIndex in 1 until row.size) {
-                if (lastItem == row[colIndex].type) {
+                if (lastItem == row[colIndex].type && lastItem != ItemType.EMPTY) {
                     count++
                     actualMatches.add(SelectedItem(rowIndex, colIndex))
                 } else {
@@ -134,7 +136,7 @@ class BoardViewModel : ViewModel() {
             for (rowIndex in 1 until board.size) {
                 val actualItem = board[rowIndex][colIndex].type
 
-                if (actualItem == lastItem) {
+                if (actualItem == lastItem && lastItem != ItemType.EMPTY) {
                     count++
                     actualMatches.add(SelectedItem(rowIndex, colIndex))
                 } else {
@@ -165,9 +167,19 @@ class BoardViewModel : ViewModel() {
     private fun removeMatches(matches: List<SelectedItem>) {
         val newBoard = board.map { it.toMutableList() }.toMutableList()
 
-        matches.map { match ->
-            newBoard[match.row][match.col] = Item(ItemType.entries.random())
+        /*matches.forEach { match ->
+            newBoard[match.row][match.col] = Item(ItemType.entries
+                .filter { it != ItemType.EMPTY }
+                .random())
+        }*/
+
+        matches.forEach { match ->
+            newBoard[match.row][match.col] = Item(ItemType.EMPTY)
         }
+
+        /*matches.forEach { match ->
+            newBoard[match.row][match.col] = Item(ItemType.EMPTY)
+        }*/
 
         board = newBoard
     }

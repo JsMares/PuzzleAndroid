@@ -7,7 +7,8 @@ enum class ItemType {
     BLUE,
     GREEN,
     PINK,
-    RED
+    RED,
+    EMPTY
 }
 
 fun ItemType.toColor() : Color {
@@ -16,14 +17,16 @@ fun ItemType.toColor() : Color {
         ItemType.GREEN -> Color.Green
         ItemType.PINK -> Color.Magenta
         ItemType.RED -> Color.Red
+        ItemType.EMPTY -> Color.White
     }
 }
 
-fun ItemType.toImage() : Int {
+fun ItemType.toImage() : Int? {
     return when (this) {
         ItemType.BLUE -> R.drawable.moon
         ItemType.GREEN -> R.drawable.bubble
         ItemType.PINK -> R.drawable.rabbit
         ItemType.RED -> R.drawable.scorpion
+        ItemType.EMPTY -> null
     }
 }
