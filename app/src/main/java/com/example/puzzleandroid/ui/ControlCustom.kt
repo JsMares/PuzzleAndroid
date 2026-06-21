@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,30 +22,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.puzzleandroid.R
 
-@Preview(showBackground = true)
 @Composable
-fun ControlCustom() {
+fun ControlCustom(
+    movements: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        MovementsControl(modifier = Modifier.fillMaxHeight())
+        MovementsControl(
+            modifier = Modifier.fillMaxHeight(),
+            movements = movements
+        )
         
         GoalsControl(modifier = Modifier.fillMaxHeight())
     }
 }
 
 @Composable
-private fun MovementsControl(modifier: Modifier) {
+private fun MovementsControl(
+    modifier: Modifier,
+    movements: Int
+) {
     Column(
         modifier = modifier
             .border(
@@ -59,7 +62,7 @@ private fun MovementsControl(modifier: Modifier) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "24",
+            text = "$movements",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.bodyLarge
         )

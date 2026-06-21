@@ -1,10 +1,13 @@
 package com.example.puzzleandroid.ui
 
 import android.util.Log
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class BoardViewModel : ViewModel() {
     var board by mutableStateOf(generateBoard())
@@ -12,6 +15,9 @@ class BoardViewModel : ViewModel() {
 
     var selected by mutableStateOf<SelectedItem?>(null)
         private set
+
+    private val _movements = mutableIntStateOf(24)
+    val movements: MutableIntState = _movements
 
     init {
         resolveCascades()
@@ -43,6 +49,7 @@ class BoardViewModel : ViewModel() {
                     swap(first, second)
                 } else {
                     resolveCascades()
+                    decreaseMovements()
                 }
             }
 
@@ -171,6 +178,10 @@ class BoardViewModel : ViewModel() {
 
             matches = findMatches()
         }
+    }
+
+    private fun decreaseMovements() {
+        _movements.intValue -= 1
     }
 }
 

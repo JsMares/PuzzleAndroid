@@ -33,6 +33,8 @@ fun BoardScreen(boardViewModel: BoardViewModel = viewModel()) {
         //boardViewModel.iterateColumns()
     }
 
+    val movements by boardViewModel.movements
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +50,7 @@ fun BoardScreen(boardViewModel: BoardViewModel = viewModel()) {
                 .padding(vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            ControlCustom()
+            ControlCustom(movements = movements)
 
             GameBoard(
                 boardViewModel = boardViewModel,
